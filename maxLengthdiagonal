@@ -1,0 +1,235 @@
+/*
+you are given a 2d matrix contiang 0 ,1 and 2 
+
+
+find out the max ium length of the diagnoal where the element start s from 1 folloewd by any 0 or 2 
+
+matrxi only contains , 0 1 and 2.
+*/
+
+Code : 
+
+import java.util.Arrays;
+
+public class MaxDiagonalLengthAllDirectionsDFS {
+
+    /**
+     * Finds the maximum length of a diagonal path in a 2D matrix starting with 1,
+     * followed by 0s or 2s. The path can start *anywhere* in the matrix and follow
+     * *any* of the four diagonal directions.  Uses DFS.  Matrix only contains 0, 1, or 2.
+     *
+     * @param matrix The 2D integer matrix containing 0, 1, and 2.
+     * @return The maximum length of a valid diagonal path. Returns 0 if no such path exists.
+     * @throws IllegalArgumentException if the input matrix is null or empty.
+     */
+    public static int maxDiagonalLengthAllDirectionsDFS(int[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            throw new IllegalArgumentException("Input matrix cannot be null or empty.");
+        }
+
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int maxLength = 0;
+
+        // Iterate through *all* cells in the matrix as potential starting points.
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matrix[i][j] == 1) {
+                    maxLength = Math.max(maxLength, dfs(matrix, i, j, 1, 1)); // Top-Left to Bottom-Right
+                    maxLength = Math.max(maxLength, dfs(matrix, i, j, 1, -1)); // Top-Right to Bottom-Left
+                    maxLength = Math.max(maxLength, dfs(matrix, i, j, -1, 1)); // Bottom-Left to Top-Right
+                    maxLength = Math.max(maxLength, dfs(matrix, i, j, -1, -1)); // Bottom-Right to Top-Left
+                }
+            }
+        }
+
+        return maxLength;
+    }
+
+    /**
+     * Performs Depth-First Search to find the length of a diagonal path starting from a given position,
+     * in a specified direction.
+     *
+     * @param matrix  The 2D integer matrix.
+     * @param row     The starting row index.
+     * @param col     The starting column index.
+     * @param rowDir  The row direction (1 for down, -1 for up).
+     * @param colDir  The column direction (1 for right, -1 for left).
+     * @return The length of the diagonal path starting from (row, col) in the specified direction.
+     */
+    private static int dfs(int[][] matrix, int row, int col, int rowDir, int colDir) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+
+        row += rowDir; // Move to the next cell in the specified row direction
+        col += colDir; // Move to the next cell in the specified column direction
+
+        if (row < 0 || row >= rows || col < 0 || col >= cols) {
+            return 1; // Out of bounds, but we started with 1, so length is at least 1.
+        }
+
+        // Now we only need to check if it is NOT a valid continuation (i.e., NOT 0 or 2)
+        if (matrix[row][col] == 1) {
+            return 1; // Invalid continuation, we started with 1, so length is at least 1.
+        }
+
+        return 1 + dfs(matrix, row, col, rowDir, colDir); // Valid continuation of the path
+    }
+
+    public static void main(String[] args) {
+        int[][] matrix1 = {
+                {1, 0, 2},
+                {0, 2, 1},
+                {1, 1, 0}
+        };
+        System.out.println("Max diagonal length (matrix1): " + maxDiagonalLengthAllDirectionsDFS(matrix1));
+
+        int[][] matrix2 = {
+                {0, 1, 0},
+                {2, 0, 1},
+                {1, 2, 0}
+        };
+        System.out.println("Max diagonal length (matrix2): " + maxDiagonalLengthAllDirectionsDFS(matrix2));
+
+        int[][] matrix3 = {
+                {1, 0, 2},
+                {0, 0, 2},
+                {2, 2, 0}
+        };
+        System.out.println("Max diagonal length (matrix3): " + maxDiagonalLengthAllDirectionsDFS(matrix3));
+
+        int[][] matrix4 = {
+                {0, 0, 0},
+                {0, 0, 0},
+                {0, 0, 0}
+        };
+        System.out.println("Max diagonal length (matrix4): " + maxDiagonalLengthAllDirectionsDFS(matrix4));
+
+        int[][] matrix5 = {
+                {1, 1, 1},
+                {1, 1, 1},
+                {1, 1, 1}
+        };
+        System.out.println("Max diagonal length (matrix5): " + maxDiagonalLengthAllDirectionsDFS(matrix5));
+
+        int[][] matrix6 = {
+                {1, 0, 2, 0},
+                {0, 2, 0, 2},
+                {1, 1, 0, 0},
+                {2, 0, 2, 1}
+        };
+        System.out.println("Max diagonal length (matrix6): " + maxDiagonalLengthAllDirectionsDFS(matrix6));
+
+        int[][] matrix7 = {
+                {1}
+        };
+
+        System.out.println("Max diagonal length (matrix7): " + maxDiagonalLengthAllDirectionsDFS(matrix7));
+
+        int[][] matrix8 = {
+                {1, 0},
+                {0, 2}
+        };
+        System.out.println("Max diagonal length (matrix8): " + maxDiagonalLengthAllDirectionsDFS(matrix8));
+
+        int[][] matrix9 = {
+                {1, 0, 0},
+                {1, 0, 0},
+                {1, 0, 0}
+        };
+        System.out.println("Max diagonal length (matrix9): " + maxDiagonalLengthAllDirectionsDFS(matrix9));
+
+        int[][] matrix10 = {
+                {0, 0, 0},
+                {0, 1, 0},
+                {0, 0, 0}
+        };
+
+        System.out.println("Max diagonal length (matrix10): " + maxDiagonalLengthAllDirectionsDFS(matrix10));
+
+        int[][] matrix11 = {
+                {0, 0, 0},
+                {0, 1, 0},
+                {0, 0, 2}
+        };
+        System.out.println("Max diagonal length (matrix11): " + maxDiagonalLengthAllDirectionsDFS(matrix11));
+
+        int[][] matrix12 = {
+                {0, 0, 0},
+                {0, 1, 0},
+                {0, 2, 0}
+        };
+        System.out.println("Max diagonal length (matrix12): " + maxDiagonalLengthAllDirectionsDFS(matrix12));
+
+        int[][] matrix13 = {
+                {0, 0, 0},
+                {0, 1, 0},
+                {0, 0, 0},
+                {0, 0, 2}
+        };
+        System.out.println("Max diagonal length (matrix13): " + maxDiagonalLengthAllDirectionsDFS(matrix13));
+
+        int[][] matrix14 = {
+                {0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 0, 2}
+        };
+
+        System.out.println("Max diagonal length (matrix14): " + maxDiagonalLengthAllDirectionsDFS(matrix14));
+
+        int[][] matrix15 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 2}
+        };
+
+        System.out.println("Max diagonal length (matrix15): " + maxDiagonalLengthAllDirectionsDFS(matrix15));
+
+        int[][] matrix16 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 2},
+                {0, 0, 0, 0}
+        };
+        System.out.println("Max diagonal length (matrix16): " + maxDiagonalLengthAllDirectionsDFS(matrix16));
+
+        int[][] matrix17 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 2},
+                {0, 0, 0, 2}
+        };
+        System.out.println("Max diagonal length (matrix17): " + maxDiagonalLengthAllDirectionsDFS(matrix16));
+
+        int[][] matrix18 = {
+                {2, 0, 0},
+                {0, 1, 0},
+                {0, 2, 0}
+        };
+        System.out.println("Max diagonal length (matrix18): " + maxDiagonalLengthAllDirectionsDFS(matrix18));
+
+        int[][] matrix19 = {
+                {2, 0, 0},
+                {0, 1, 0},
+                {0, 0, 2}
+        };
+        System.out.println("Max diagonal length (matrix19): " + maxDiagonalLengthAllDirectionsDFS(matrix19));
+
+        int[][] matrix20 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 0},
+                {0, 2, 0, 0},
+                {0, 0, 0, 0}
+        };
+        System.out.println("Max diagonal length (matrix20): " + maxDiagonalLengthAllDirectionsDFS(matrix20)); // Expect 1
+
+        int[][] matrix21 = {
+                {0, 0, 0, 0},
+                {0, 0, 1, 2},
+                {0, 2, 0, 0},
+                {0, 0, 0, 0}
+        };
+        System.out.println("Max diagonal length (matrix21): " + maxDiagonalLengthAllDirectionsDFS(matrix21)); // Expect 2
+    }
+}
