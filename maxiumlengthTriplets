@@ -1,0 +1,112 @@
+/*
+The question is like this 
+
+
+at every step you are given an input 
+
+
+you have to add it to list and then find maxium such triplets (where a-b = b-c = diff)
+
+
+for example , at startign array/lsit is empty 
+
+
+then input is provided as string
+
+then ["+4"] >> add 4 to hte list 
+
+[+5] >> add 5 to the list 
+
+[+6] >> add 6 to the list 
+
+
+now there one such triplet
+
+
+if you get "-4" >> remove 4 from the list 
+
+
+then the array would be [5,6] >> no triplets now as the length is less than 3
+*/
+
+
+code : 
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DynamicTripletCounter {
+
+    private List<Integer> nums = new ArrayList<>();
+    private int diff; // Common difference
+
+    public DynamicTripletCounter(int diff) {
+        this.diff = diff;
+    }
+
+    public int processInput(String input) {
+        if (input == null || input.isEmpty()) {
+            return 0;
+        }
+
+        char operation = input.charAt(0);
+        int number = Integer.parseInt(input.substring(1));
+
+        if (operation == '+') {
+            nums.add(number);
+        } else if (operation == '-') {
+            nums.remove(Integer.valueOf(number));
+        } else {
+            System.out.println("Invalid operation: " + operation);
+            return 0;
+        }
+
+        return countTripletsRearrangeBruteForce(nums, diff);
+    }
+
+    public int countTripletsRearrangeBruteForce(List<Integer> nums, int diff) {
+        int count = 0;
+        if (nums == null || nums.size() < 3) {
+            return 0;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = 0; j < nums.size(); j++) {
+                if (i == j) continue;
+
+                for (int k = 0; k < nums.size(); k++) {
+                    if (k == i || k == j) continue;
+
+                    int a = nums.get(i);
+                    int b = nums.get(j);
+                    int c = nums.get(k);
+
+                    if ((a - b == diff) && (b - c == diff)) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count / 6;
+    }
+
+    public static void main(String[] args) {
+        DynamicTripletCounter counter = new DynamicTripletCounter(1); // Example diff = 1
+
+        System.out.println("Initial triplets: " + counter.processInput(""));
+        System.out.println("After +4: " + counter.processInput("+4"));
+        System.out.println("After +5: " + counter.processInput("+5"));
+        System.out.println("After +6: " + counter.processInput("+6"));
+        System.out.println("After +4: " + counter.processInput("+4"));
+        System.out.println("After -4: " + counter.processInput("-4"));
+        System.out.println("After -4: " + counter.processInput("-4"));
+
+        DynamicTripletCounter counter2 = new DynamicTripletCounter(2);
+        System.out.println("Initial triplets: " + counter2.processInput(""));
+        System.out.println("After +2: " + counter2.processInput("+2"));
+        System.out.println("After +4: " + counter2.processInput("+4"));
+        System.out.println("After +6: " + counter2.processInput("+6"));
+        System.out.println("After +8: " + counter2.processInput("+8")); //(8,6,4) 2 triplets
+    }
+}
