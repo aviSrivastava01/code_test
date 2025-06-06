@@ -1,0 +1,29 @@
+//brute force
+
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<Integer> findNextSmallestDiff(int[] arr) {
+        List<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            boolean flag = false;
+
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[i]) {
+                    int diff = j - i;
+                    result.add(diff);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                result.add(0);
+            }
+        }
+
+        return result;
+    }
+}
